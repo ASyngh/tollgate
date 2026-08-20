@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip() or None
 
 if not DATABASE_URL:
     DB_HOST = os.environ["DB_HOST"]
