@@ -3,11 +3,14 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
-DB_HOST = os.environ["DB_HOST"]
-DB_PORT = int(os.environ["DB_PORT"])
-DB_NAME = os.environ["POSTGRES_DB"]
-DB_USER = os.environ["POSTGRES_USER"]
-DB_PASSWORD = os.environ["POSTGRES_PASSWORD"]
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if not DATABASE_URL:
+    DB_HOST = os.environ["DB_HOST"]
+    DB_PORT = int(os.environ["DB_PORT"])
+    DB_NAME = os.environ["POSTGRES_DB"]
+    DB_USER = os.environ["POSTGRES_USER"]
+    DB_PASSWORD = os.environ["POSTGRES_PASSWORD"]
 
 CITIES = {
     "Delhi":     {"latitude": 28.6139, "longitude": 77.2090},

@@ -1,0 +1,37 @@
+name: TollGate daily pipeline
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Date to process (YYYY-MM-DD). Defaults to yesterday."
+        required: false
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Resolve run date
+        id: resolve
+        run: |
+          if [ -n "${{ inputs.run_date }}" ]; then
+            echo "run_date=${{ inputs.run_date }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_date=$(date -u -d 'yesterday' +%F)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run pipeline
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python -m tollgate.pipeline ${{ steps.resolve.outputs.run_date }}

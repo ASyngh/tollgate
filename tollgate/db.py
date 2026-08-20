@@ -6,6 +6,8 @@ from tollgate import config
 
 
 def connection_string() -> str:
+    if config.DATABASE_URL:
+        return config.DATABASE_URL
     return (
         f"host={config.DB_HOST} "
         f"port={config.DB_PORT} "
